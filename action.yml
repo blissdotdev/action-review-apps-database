@@ -32,5 +32,5 @@ runs:
     - run: echo "DATABASE_URL=postgresql://${{ inputs.database-user }}:${{ inputs.database-password }}@${{ inputs.database-host }}:${{ inputs.database-port }}/${{ inputs.prefix }}-pr-${{ inputs.event-number }}" >> "$GITHUB_ENV"
       shell: bash
     - id: get-database-url
-      run: echo "::set-output name=database-url::$(echo $DATABASE_URL)"
+      run: echo "database-url={{ env.DATABASE_URL }}" >> $GITHUB_OUTPUT
       shell: bash
