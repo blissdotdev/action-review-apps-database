@@ -1,0 +1,34 @@
+name: 'Review Apps Database Deployment'
+description: 'Create and Destroy postgres databases in an RDS instance'
+inputs:
+  prefix:
+    description: 'Instance prefix'
+    required: true
+    default: 'postgres-app'
+  database-host:
+    description: 'Database Host'
+    required: true
+  database-user:
+    description: 'Database User'
+    required: true
+  database-password:
+    description: 'Database User'
+    required: true
+  event-number:
+    description: 'Pull Request number'
+    required: true
+  command:
+    description: 'deploy/destroy'
+    default: 'deploy'
+outputs:
+  database-url:
+    description: 'Database URL'
+    value: ${{ steps.get-database-url.outputs.database-url }}
+runs:
+  using: "composite"
+  steps:
+    - run: psql -U ${{ inputs.database-user }} -h ${{ inputs.database-host }} postgres -c "create database \"${{ inputs.prefix }}-pr-${{ inputs.event-number }}\""
+    - run: echo "DATABASE_URL=postgresql://${{ inputs.database-user }}:${{ inputs.database-password }}@${{ inputs.database-host }}:${{ inputs.database-port }}/${{ inputs.prefix }}-pr-${{ inputs.event-number }}" >> "$GITHUB_ENV"
+    - id: get-database-url
+      run: echo "::set-output name=database-url::$(echo $DATABASE_URL)"
+      shell: bash

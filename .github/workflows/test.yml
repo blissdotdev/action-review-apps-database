@@ -1,0 +1,20 @@
+name: Test
+
+on:
+  push
+
+jobs:
+  deploy:
+    name: Test the Review Apps Database Deployment Action (deploy)
+    runs-on: ubuntu-20.04
+    steps:
+      - id: deploy-database
+        name: Deploy Database
+        uses: blissfuldotdev/action-review-apps-database@main
+        with:
+          command: deploy
+          database-host: ${{ secrets.DATABASE_HOST }}
+          database-user: ${{ secrets.DATABASE_USER }}
+          database-password: ${{ secrets.DATABASE_PASSWORD }}
+          prefix: review-apps-test
+          event-number: 25
