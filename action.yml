@@ -27,7 +27,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: psql -U ${{ inputs.database-user }} -h ${{ inputs.database-host }} postgres -c "create database \"${{ inputs.prefix }}-pr-${{ inputs.event-number }}\""
+    - run: PGPASSWORD=${{ inputs.database-password }} psql -U ${{ inputs.database-user }} -h ${{ inputs.database-host }} postgres -c "create database \"${{ inputs.prefix }}-pr-${{ inputs.event-number }}\""
       shell: bash
     - run: echo "DATABASE_URL=postgresql://${{ inputs.database-user }}:${{ inputs.database-password }}@${{ inputs.database-host }}:${{ inputs.database-port }}/${{ inputs.prefix }}-pr-${{ inputs.event-number }}" >> "$GITHUB_ENV"
       shell: bash
