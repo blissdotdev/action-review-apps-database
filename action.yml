@@ -27,8 +27,12 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - run: echo database_exists=$(PGPASSWORD=${{ inputs.database-password }} psql -U ${{ inputs.database-user }} -h ${{ inputs.database-host }} postgres -XtAc "SELECT 1 FROM pg_database WHERE datname = '${{ inputs.prefix }}-pr-${{ inputs.event-number }}'") >> $GITHUB_OUTPUT
+      shell: bash
+      id: database-check
     - run: PGPASSWORD=${{ inputs.database-password }} psql -U ${{ inputs.database-user }} -h ${{ inputs.database-host }} postgres -c "create database \"${{ inputs.prefix }}-pr-${{ inputs.event-number }}\""
       shell: bash
+      if: steps.database-check.outputs.database_exists != 1
     - run: echo "DATABASE_URL=postgresql://${{ inputs.database-user }}:${{ inputs.database-password }}@${{ inputs.database-host }}:${{ inputs.database-port }}/${{ inputs.prefix }}-pr-${{ inputs.event-number }}" >> $GITHUB_ENV
       shell: bash
     - id: get-database-url
