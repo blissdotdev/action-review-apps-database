@@ -24,7 +24,7 @@ jobs:
         uses: blissdotdev/action-review-apps-database@main
         with:
           command: deploy
-          database-host: postgres
+          database-host: localhost
           database-user: postgres
           database-password: postgres
           prefix: review-apps-test
